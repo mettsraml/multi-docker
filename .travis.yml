@@ -1,0 +1,28 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t mettmett/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true mettmett/react-test npm run test
+
+after_success:
+  - docker build -t mettmett/multi-client ./client
+  - docker build -t mettmett/multi-nginx ./nginx
+  - docker build -t mettmett/multi-server ./server
+  - docker build -t mettmett/multi-worker ./worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-react"
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-us-east-2-881844983500"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+
