@@ -1,6 +1,6 @@
 {
     "AWSEBDockerrunVersion": 2,
-    "conteinerDefinitions":[
+    "containerDefinitions":[
         {
             "name": "client",
             "image": "mettmett/multi-client",
